@@ -21,9 +21,11 @@ while True:
     opcao = int(input(menu))
     
     if opcao == 1: # Extrato
+        print("\n************** EXTRATO **************")
         print(extrato)
-
+        print("\n*************************************")
         print(f"Saldo:         R$ {saldo:.2f}\n")
+        print("\n*************************************")
 
     elif opcao == 2: # Saque
         if numero_saques == LIMITE_SAQUES: # Testa quandidade de saques disponíveis
