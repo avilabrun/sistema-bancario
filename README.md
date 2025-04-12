@@ -12,6 +12,6 @@ O Sistema irá permitir 3 operações, saque, depósito e extrato
   - não é permitido depósitos negativos
   - deverão ser listados todos os depósitos em conta
 
-# Operação de Extrato
+## Operação de Extrato
   - funcionalidade deverá exibir todos depósitos e saques
   - deverá exibir ao final o saque, no formato *R$ xxxx.xx*
