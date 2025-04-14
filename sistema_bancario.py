@@ -18,6 +18,9 @@ extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
 
+LIMITE_OPERACOES = 5
+operacoes = 0
+
 while True:
 
     opcao = int(input(menu))
@@ -30,39 +33,52 @@ while True:
         print("\n*************************************")
 
     elif opcao == 2: # Saque
-        if numero_saques == LIMITE_SAQUES: # Testa quandidade de saques disponíveis
-            print("Número de saques diários excedido.")
-        
+        if operacoes >= LIMITE_OPERACOES:
+            print("Limite de operações diárias excedido")
+
         else:
-            valor_saque = float(input("Informe o valor desejado: "))
+            if numero_saques == LIMITE_SAQUES: # Testa quandidade de saques disponíveis
+                print("Número de saques diários excedido.")
             
-            if valor_saque <= 0:
-                print("Valor informado inválido para operações de saque!")
-
             else:
-                if valor_saque > saldo: # Testa saldo suficente
-                    print("Saldo insuficiente para operação")
+                valor_saque = float(input("Informe o valor desejado: "))
                 
-                elif valor_saque > limite: # Testa limite de saque por operação
-                    print("Valor informado acima do limite permitido para operações de saque!")
+                if valor_saque <= 0:
+                    print("Valor informado inválido para operações de saque!")
 
-                else: # Realiza saque se todas as condições forem atendidas
-                    saldo -= valor_saque # Incrementa saldo
-                    numero_saques += 1 # Incrementa saldo
-                    hora = datetime.now()
-                    extrato += f"{hora} - Saque:         R$ {valor_saque:.2f}\n" # Registra extrato
+                else:
+                    if valor_saque > saldo: # Testa saldo suficente
+                        print("Saldo insuficiente para operação")
+                    
+                    elif valor_saque > limite: # Testa limite de saque por operação
+                        print("Valor informado acima do limite permitido para operações de saque!")
 
-    elif opcao == 3: # Depósito
-        hora = datetime.now()
-        
-        valor_deposito = int(input("Informe o valor a ser depositado: "))
-        
-        if valor_deposito > 0: # Testa valor positivo para depósito
-            saldo += valor_deposito # Incrementa saldo
-            extrato += f"{hora} - Depósito:      R$ {valor_deposito:.2f}\n" # Registra extrato
-        
-        else: # Mensagem de erro para valor de depósito inválido
-            print("Valor informado inválido para operação de depósito.")
+                    else: # Realiza saque se todas as condições forem atendidas
+                        saldo -= valor_saque # Incrementa saldo
+                        numero_saques += 1 # Incrementa saques realizados
+                        
+                        hora = datetime.now()
+                        extrato += f"{hora} - Saque:         R$ {valor_saque:.2f}\n" # Registra extrato
+
+                        operacoes += 1 # Incrementa operações realizadas no dia
+
+    elif opcao == 3: # Depósito      
+        if operacoes >= LIMITE_OPERACOES:
+            print("Limite de operações diárias excedido")
+
+        else:
+            valor_deposito = int(input("Informe o valor a ser depositado: "))
+            
+            if valor_deposito > 0: # Testa valor positivo para depósito
+                saldo += valor_deposito # Incrementa saldo
+
+                hora = datetime.now()
+                extrato += f"{hora} - Depósito:      R$ {valor_deposito:.2f}\n" # Registra extrato
+
+                operacoes += 1 # Incrementa operações realizadas no dia
+            
+            else: # Mensagem de erro para valor de depósito inválido
+                print("Valor informado inválido para operação de depósito.")
 
     elif opcao == 9: # Imprime o saldo atual
         print(f"Saldo:         R$ {saldo:.2f}\n")
