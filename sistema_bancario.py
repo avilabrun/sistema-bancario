@@ -18,7 +18,7 @@ extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
 
-LIMITE_OPERACOES = 5
+LIMITE_OPERACOES = 10
 operacoes = 0
 
 while True:
