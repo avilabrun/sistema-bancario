@@ -1,3 +1,5 @@
+from datetime import date, datetime
+
 menu = """
 Olá!
 Informe o serviço desejado entre as opções:
@@ -47,13 +49,17 @@ while True:
                 else: # Realiza saque se todas as condições forem atendidas
                     saldo -= valor_saque # Incrementa saldo
                     numero_saques += 1 # Incrementa saldo
-                    extrato += f"Saque:         R$ {valor_saque:.2f}\n" # Registra extrato
+                    hora = datetime.now()
+                    extrato += f"{hora} - Saque:         R$ {valor_saque:.2f}\n" # Registra extrato
 
     elif opcao == 3: # Depósito
+        hora = datetime.now()
+        
         valor_deposito = int(input("Informe o valor a ser depositado: "))
+        
         if valor_deposito > 0: # Testa valor positivo para depósito
             saldo += valor_deposito # Incrementa saldo
-            extrato += f"Depósito:      R$ {valor_deposito:.2f}\n" # Registra extrato
+            extrato += f"{hora} - Depósito:      R$ {valor_deposito:.2f}\n" # Registra extrato
         
         else: # Mensagem de erro para valor de depósito inválido
             print("Valor informado inválido para operação de depósito.")
