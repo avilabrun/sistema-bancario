@@ -13,13 +13,16 @@ Informe o serviço desejado entre as opções:
 => """
 
 saldo = 0
-limite = 500
 extrato = ""
-numero_saques = 0
-LIMITE_SAQUES = 3
 
-LIMITE_OPERACOES = 10
+mascara_ptbr = '%d/%m/%Y %H:%M'
+
+limite_saque = 500
+numero_saques = 0
 operacoes = 0
+
+LIMITE_SAQUES_DIARIOS = 3
+LIMITE_OPERACOES = 10
 
 while True:
 
@@ -37,7 +40,7 @@ while True:
             print("Limite de operações diárias excedido")
 
         else:
-            if numero_saques == LIMITE_SAQUES: # Testa quandidade de saques disponíveis
+            if numero_saques == LIMITE_SAQUES_DIARIOS: # Testa quandidade de saques disponíveis
                 print("Número de saques diários excedido.")
             
             else:
@@ -50,7 +53,7 @@ while True:
                     if valor_saque > saldo: # Testa saldo suficente
                         print("Saldo insuficiente para operação")
                     
-                    elif valor_saque > limite: # Testa limite de saque por operação
+                    elif valor_saque > limite_saque: # Testa limite de saque por operação
                         print("Valor informado acima do limite permitido para operações de saque!")
 
                     else: # Realiza saque se todas as condições forem atendidas
@@ -58,7 +61,7 @@ while True:
                         numero_saques += 1 # Incrementa saques realizados
                         
                         hora = datetime.now()
-                        extrato += f"{hora} - Saque:         R$ {valor_saque:.2f}\n" # Registra extrato
+                        extrato += f"{hora.strftime(mascara_ptbr)} - Saque:         R$ {valor_saque:.2f}\n" # Registra extrato
 
                         operacoes += 1 # Incrementa operações realizadas no dia
 
@@ -73,7 +76,7 @@ while True:
                 saldo += valor_deposito # Incrementa saldo
 
                 hora = datetime.now()
-                extrato += f"{hora} - Depósito:      R$ {valor_deposito:.2f}\n" # Registra extrato
+                extrato += f"{hora.strftime(mascara_ptbr)} - Depósito:      R$ {valor_deposito:.2f}\n" # Registra extrato
 
                 operacoes += 1 # Incrementa operações realizadas no dia
             
