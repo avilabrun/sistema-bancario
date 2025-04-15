@@ -1,5 +1,35 @@
 from datetime import date, datetime
 
+# cadastrar usuário
+# cadastrar agencia e conta
+
+# vincular conta ao usuário
+# modularizar o código
+
+
+# Saque
+    # função saque recebe argumentos apenas por nome ('saque(valor = variavel)')
+        # entrada: saldo, valor, extrato, limite, numero_saques, 	limite_saques
+        # saída: saldo e extrato
+
+# Depósito
+    # recebe argumentos por posição (variável)
+        # entrada: saldo, valor e extrato
+        # saída: saldo e extrato
+
+# Extrato
+    # recebe argumentos posicionais e por nome
+
+# Cadastrar usuário
+    # Nome, Nascimento, CPF e Endereço (Rua, N - Bairro - Cidade/Estado)
+    # CPF recebe apenas numeros
+    # Não podem ser usados CPFs repetidos
+
+# Cadastrar Contas
+    # Cada conta é vinculada a um usuário, que pode possuir mais contas
+    # Agência: 0001
+    # Contas tem numeração única
+
 menu = """
 Olá!
 Informe o serviço desejado entre as opções:
@@ -23,6 +53,33 @@ operacoes = 0
 
 LIMITE_SAQUES_DIARIOS = 3
 LIMITE_OPERACOES = 10
+
+def menu():
+    pass
+
+def cadastrar_usuario():
+    pass
+
+def filtrar_usuário():
+    pass
+
+def cadastrar_conta():
+    pass
+
+def listar_contas():
+    pass
+
+def sacar():
+    pass
+    
+def depositar():
+    pass
+    
+def consulta_saldo():
+    pass
+
+def consulta_extrato():
+    pass
 
 while True:
 
