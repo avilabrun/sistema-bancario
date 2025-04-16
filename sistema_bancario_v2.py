@@ -30,122 +30,169 @@ from datetime import date, datetime
     # Agência: 0001
     # Contas tem numeração única
 
-menu = """
-Olá!
-Informe o serviço desejado entre as opções:
-
-    1 - Extrato
-    2 - Saque
-    3 - Depósito
-    9 - Saldo
-    0 - Sair
-
-=> """
-
-saldo = 0
-extrato = ""
-
-mascara_ptbr = '%d/%m/%Y %H:%M'
-
-limite_saque = 500
-numero_saques = 0
-operacoes = 0
-
-LIMITE_SAQUES_DIARIOS = 3
-LIMITE_OPERACOES = 10
-
 def menu():
-    pass
+    menu = """
+    Olá!
+    Informe o serviço desejado entre as opções:
 
-def cadastrar_usuario():
-    pass
+        1 - Cadastrar usuário
+        2 - Listar usuários
+        3 - Cadastrar conta
+        4 - Listar contas
+        5 - Consultar Saldo
+        6 - Extrato
+        7 - Saque
+        8 - Depósito
+        
+        0 - Sair
 
-def filtrar_usuário():
-    pass
+    => """
+    
+    return int(input(menu))
+
+def cadastrar_usuario(usuarios):
+    cpf = input("\nInforme o CPF (somente números): ")
+    
+    usuario = filtrar_usuario(cpf, usuarios)
+
+    if usuarios:
+        print("\nJá existe usuário com o CPF informado!")
+        return
+    
+    nome = input("Informe o nome completo: ")
+    data_nascimento = input("Informe a Data de Nascimento: ")
+    endereco = input("Informe o endereço (logradouro, número, bairro, sigla da cidade/sigla do estado): ")
+
+    usuarios.append({"nome" : nome, "data_nascimento" : data_nascimento, "CPF": cpf, "endereco" : endereco})
+
+    print("\nUsuário criado com sucesso!")
+
+def filtrar_usuario(cpf, usuarios):
+    usuarios_filtrados = []
+
+    return usuarios_filtrados[0] if usuarios_filtrados else None
 
 def cadastrar_conta():
+    pass
+
+def listar_usuarios():
     pass
 
 def listar_contas():
     pass
 
-def sacar():
-    pass
+def consulta_saldo(saldo):
+    print(f"\nSaldo:         R$ {saldo:.2f}")
+
+def consulta_extrato(saldo, extrato):
+    print("\n***************** EXTRATO *****************")
+    print(extrato if extrato else "Não foram realizadas operações.")
+    print("\n*******************************************")
+    print(f"Saldo:         R$ {saldo:.2f}")
+    print("\n*******************************************")
+
+def sacar(*, saldo, valor, extrato, limite_saque, numero_saques, saques_diarios):
+    mascara_ptbr = '%d/%m/%Y %H:%M'
+    saldo_excedido = valor > saldo #
+    limite_excedido = valor > limite_saque #
+    saques_exedidos = numero_saques >= saques_diarios #
+
+    if saques_exedidos:
+        print("\nLimite de saques diários excedidos.")
+
+    elif valor < 0:
+        print("Valor informado inválido para a operação.")
     
-def depositar():
-    pass
+    elif limite_excedido:
+        print(f"\nLimite de saque excedido para a operação. (Limite atual: R$ {limite_saque:.2f})")
     
-def consulta_saldo():
-    pass
-
-def consulta_extrato():
-    pass
-
-while True:
-
-    opcao = int(input(menu))
-    
-    if opcao == 1: # Extrato
-        print("\n************** EXTRATO **************")
-        print(extrato)
-        print("\n*************************************")
-        print(f"Saldo:         R$ {saldo:.2f}\n")
-        print("\n*************************************")
-
-    elif opcao == 2: # Saque
-        if operacoes >= LIMITE_OPERACOES:
-            print("Limite de operações diárias excedido")
-
-        else:
-            if numero_saques == LIMITE_SAQUES_DIARIOS: # Testa quandidade de saques disponíveis
-                print("Número de saques diários excedido.")
-            
-            else:
-                valor_saque = float(input("Informe o valor desejado: "))
-                
-                if valor_saque <= 0:
-                    print("Valor informado inválido para operações de saque!")
-
-                else:
-                    if valor_saque > saldo: # Testa saldo suficente
-                        print("Saldo insuficiente para operação")
-                    
-                    elif valor_saque > limite_saque: # Testa limite de saque por operação
-                        print("Valor informado acima do limite permitido para operações de saque!")
-
-                    else: # Realiza saque se todas as condições forem atendidas
-                        saldo -= valor_saque # Incrementa saldo
-                        numero_saques += 1 # Incrementa saques realizados
-                        
-                        hora = datetime.now()
-                        extrato += f"{hora.strftime(mascara_ptbr)} - Saque:         R$ {valor_saque:.2f}\n" # Registra extrato
-
-                        operacoes += 1 # Incrementa operações realizadas no dia
-
-    elif opcao == 3: # Depósito      
-        if operacoes >= LIMITE_OPERACOES:
-            print("Limite de operações diárias excedido")
-
-        else:
-            valor_deposito = int(input("Informe o valor a ser depositado: "))
-            
-            if valor_deposito > 0: # Testa valor positivo para depósito
-                saldo += valor_deposito # Incrementa saldo
-
-                hora = datetime.now()
-                extrato += f"{hora.strftime(mascara_ptbr)} - Depósito:      R$ {valor_deposito:.2f}\n" # Registra extrato
-
-                operacoes += 1 # Incrementa operações realizadas no dia
-            
-            else: # Mensagem de erro para valor de depósito inválido
-                print("Valor informado inválido para operação de depósito.")
-
-    elif opcao == 9: # Imprime o saldo atual
-        print(f"Saldo:         R$ {saldo:.2f}\n")
-    
-    elif opcao == 0: # Sair
-        print("Obrigado por usar nossos serviços!")
-        break
+    elif saldo_excedido:
+        print(f"\nSaldo insuficiente para a operação. Saldo atual: R$ {saldo}")
 
     else:
-        print("Opção invalida!\nPor favor insira uma opção válida.")
+        saldo -= valor
+        numero_saques += 1
+
+        hora = datetime.now()
+        extrato += f"{hora.strftime(mascara_ptbr)} - Saque:         R$ {valor:.2f}\n" # Registra extrato
+
+    return saldo, extrato
+
+def depositar(saldo, valor, extrato, /):
+    mascara_ptbr = '%d/%m/%Y %H:%M'
+    
+    if valor > 0:
+        saldo += valor
+
+        hora = datetime.now()
+        extrato += f"{hora.strftime(mascara_ptbr)} - Depósito:      R$ {valor:.2f}\n" # Registra extrato
+
+        print("Depósito realizado com sucesso!")
+
+    else:
+        print("Valor informado inválido para a operação.")
+
+    return saldo, extrato
+
+def main():
+    usuarios = []
+    
+    AGENCIA = "0001"
+    contas = []
+       
+    saldo = 0
+    extrato = ""
+
+    limite_saque = 500
+    numero_saques = 0
+    # operacoes = 0
+
+    SAQUES_DIARIOS = 3
+    # LIMITE_OPERACOES = 10
+
+    while True:
+        opcao = menu()
+
+        if opcao == 1: # Cadastrar usuário
+            cadastrar_usuario(usuarios)
+                    
+        elif opcao == 2: # Listar usuários
+            listar_usuarios()
+
+        elif opcao == 3: # Cadastrar conta
+            cadastrar_conta()
+        
+        elif opcao == 4: # Listar contas
+            listar_contas()
+        
+        elif opcao == 5: # Consultar saldo
+            consulta_saldo(saldo)
+                    
+        elif opcao == 6: # Consultar extrato
+            consulta_extrato(saldo, extrato)
+        
+        elif opcao == 7: # Sacar
+            valor = float(input("Informe o valor do saque: "))
+
+            saldo, extrato = sacar(
+                saldo=saldo,
+                valor=valor,
+                extrato=extrato,
+                limite_saque=limite_saque,
+                numero_saques=numero_saques,
+                saques_diarios=SAQUES_DIARIOS,
+            )
+        
+        elif opcao == 8: # Depositar
+            valor = float(input("Informe o valor do depósito: "))
+            
+            saldo, extrato = depositar(saldo, valor, extrato)
+                    
+        elif opcao == 0: # Sair
+            print("Obrigado por usar nossos serviços!")
+            break
+
+        else:
+            print("Opção invalida!\nPor favor insira uma opção válida.")
+    
+main()
