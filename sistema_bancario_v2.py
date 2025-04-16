@@ -36,13 +36,12 @@ def menu():
     Informe o serviço desejado entre as opções:
 
         1 - Cadastrar usuário
-        2 - Listar usuários
-        3 - Cadastrar conta
-        4 - Listar contas
-        5 - Consultar Saldo
-        6 - Extrato
-        7 - Saque
-        8 - Depósito
+        2 - Cadastrar conta
+        3 - Listar contas
+        4 - Consultar Saldo
+        5 - Extrato
+        6 - Saque
+        7 - Depósito
         
         0 - Sair
 
@@ -55,36 +54,49 @@ def cadastrar_usuario(usuarios):
     
     usuario = filtrar_usuario(cpf, usuarios)
 
-    if usuarios:
+    if usuario:
         print("\nJá existe usuário com o CPF informado!")
         return
     
     nome = input("Informe o nome completo: ")
-    data_nascimento = input("Informe a Data de Nascimento: ")
+    nascimento = input("Informe a Data de Nascimento: ")
     endereco = input("Informe o endereço (logradouro, número, bairro, sigla da cidade/sigla do estado): ")
 
-    usuarios.append({"nome" : nome, "data_nascimento" : data_nascimento, "CPF": cpf, "endereco" : endereco})
+    usuarios.append({"nome" : nome, "nascimento" : nascimento, "cpf": cpf, "endereco" : endereco})
 
     print("\nUsuário criado com sucesso!")
 
 def filtrar_usuario(cpf, usuarios):
-    usuarios_filtrados = []
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
 
     return usuarios_filtrados[0] if usuarios_filtrados else None
 
-def cadastrar_conta():
-    pass
+def cadastrar_conta(agencia, numero_conta, usuarios):
+    cpf = input("\nInforme o CPF (somente números): ")
+    
+    usuario = filtrar_usuario(cpf, usuarios)
 
-def listar_usuarios():
-    pass
+    if usuario:
+        print("\nConta criada para o usuário informado!")
+        print(f"Agência: {agencia} - Conta: {numero_conta}")
+        
+        return {"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario}
+        
+    # else:
+    print("\nUsuário não cadastrado. Por favor cadastre um usuário.")
 
-def listar_contas():
-    pass
+def listar_contas(contas):
+    for conta in contas:
+        linha = f"""
+        Titular: {conta['usuario']['nome']}
+            Agência: {conta['agencia']} - Conta: {conta['numero_conta']}
+        """
+    print(linha)
 
 def consulta_saldo(saldo):
     print(f"\nSaldo:         R$ {saldo:.2f}")
 
-def consulta_extrato(saldo, extrato):
+def consulta_extrato(saldo, /, *, extrato):
     print("\n***************** EXTRATO *****************")
     print(extrato if extrato else "Não foram realizadas operações.")
     print("\n*******************************************")
@@ -93,6 +105,7 @@ def consulta_extrato(saldo, extrato):
 
 def sacar(*, saldo, valor, extrato, limite_saque, numero_saques, saques_diarios):
     mascara_ptbr = '%d/%m/%Y %H:%M'
+    
     saldo_excedido = valor > saldo #
     limite_excedido = valor > limite_saque #
     saques_exedidos = numero_saques >= saques_diarios #
@@ -156,22 +169,23 @@ def main():
         if opcao == 1: # Cadastrar usuário
             cadastrar_usuario(usuarios)
                     
-        elif opcao == 2: # Listar usuários
-            listar_usuarios()
+        elif opcao == 2: # Cadastrar conta
+            numero_conta = len(contas) + 1
+            conta = cadastrar_conta(AGENCIA, numero_conta, usuarios)
 
-        elif opcao == 3: # Cadastrar conta
-            cadastrar_conta()
+            if conta:
+                contas.append(conta)
         
-        elif opcao == 4: # Listar contas
-            listar_contas()
+        elif opcao == 3: # Listar contas
+            listar_contas(contas)
         
-        elif opcao == 5: # Consultar saldo
+        elif opcao == 4: # Consultar saldo
             consulta_saldo(saldo)
                     
-        elif opcao == 6: # Consultar extrato
-            consulta_extrato(saldo, extrato)
+        elif opcao == 5: # Consultar extrato
+            consulta_extrato(saldo, extrato=extrato)
         
-        elif opcao == 7: # Sacar
+        elif opcao == 6: # Sacar
             valor = float(input("Informe o valor do saque: "))
 
             saldo, extrato = sacar(
@@ -183,7 +197,7 @@ def main():
                 saques_diarios=SAQUES_DIARIOS,
             )
         
-        elif opcao == 8: # Depositar
+        elif opcao == 7: # Depositar
             valor = float(input("Informe o valor do depósito: "))
             
             saldo, extrato = depositar(saldo, valor, extrato)
@@ -194,5 +208,5 @@ def main():
 
         else:
             print("Opção invalida!\nPor favor insira uma opção válida.")
-    
+
 main()
