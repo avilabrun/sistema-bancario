@@ -266,13 +266,13 @@ def exibir_extrato(clientes):
     
     for transacao in conta.historico.gerar_relatorio():
         tem_transacao = True
-        extrato += f"{transacao['tipo']}:\n\tR$ {transacao['valor']:.2f}"
+        extrato += f"{transacao['tipo']}:\n\tR$ {transacao['valor']:.2f}\n"
     
     if not tem_transacao:
         extrato = "Não foram realizadas transações\n"
     
     print(extrato)
-    print(f"\n\nSaldo: \t\tR$ {conta.saldo:.2f}\n*******************************************")
+    print(f"\nSaldo: \t\tR$ {conta.saldo:.2f}\n*******************************************")
 
 def sacar(clientes):
     cpf = input("Informe o CPF do cliente: ")
